@@ -1,0 +1,6 @@
+#!/bin/bash 
+set -x
+echo "Building the RESTfullStorageAPI" 
+g++ -c -Wall -Werror -fpic -std=c++0x -I/usr/include/cppconn ./src/Main.cpp  ./src/Request.cpp ./src/Base64.cpp ./src/RequestHandler.cpp ./src/HashUtil.cpp ./src/Entities/User.cpp ./src/DbAdapter.cpp  
+g++ -shared -o libRESTfullStorageAPI.so Main.o Request.o RequestHandler.o Base64.o HashUtil.o User.o DbAdapter.o -lssl -lcrypto -L/usr/lib -lmysqlcppconn
+
