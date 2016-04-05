@@ -7,7 +7,7 @@
 #include <string>
 using namespace std;
 #include "Request.h"
-#include "DbAdapter.h"
+#include "MySqlDbAdapter.h"
 
 #ifndef REQUESTHANDLER_H_
 #define REQUESTHANDLER_H_
@@ -15,11 +15,12 @@ class RequestHandler
 {
 
 private:
-    DbAdapter dbAdapter;
-	bool AuthenticateUser(string authHeader);
+	MySqlDbAdapter dbAdapter;
+	bool AuthenticateUser(Request request);
+	bool IsValidEndPoint(string resource);
 
 public:
-	RequestHandler(DbAdapter dbAdapter);
+	RequestHandler(MySqlDbAdapter dbAdapter);
 	int ProcessRequest(Request request, string *response);
 
 

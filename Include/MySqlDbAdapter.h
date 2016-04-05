@@ -5,8 +5,8 @@
  *      Author: dishan
  */
 
-#ifndef DBADAPTER_H_
-#define DBADAPTER_H_
+#ifndef MYSQLDBADAPTER_H_
+#define MYSQLDBADAPTER_H_
 
 #include "Entities/User.h"
 #include "mysql_connection.h"
@@ -16,7 +16,7 @@
 #include <cppconn/statement.h>
 #include <cppconn/prepared_statement.h>
 
-class DbAdapter
+class MySqlDbAdapter
 {
 
 private:
@@ -27,4 +27,4 @@ public:
 
 };
 
-#endif /* DBADAPTER_H_ */
+#endif /* MYSQLDBADAPTER_H_ */

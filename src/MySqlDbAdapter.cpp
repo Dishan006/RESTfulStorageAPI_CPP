@@ -5,12 +5,12 @@
  *      Author: dishan
  */
 
-#include "../Include/DbAdapter.h"
 #include "../Include/Entities/User.h"
 #include <iostream>
 #include <stdlib.h>
+#include "../Include/MySqlDbAdapter.h"
 
-User* DbAdapter::GetUser(string userName, string basicAuthHash)
+User* MySqlDbAdapter::GetUser(string userName, string basicAuthHash)
 {
 	cout <<userName <<" : "<<basicAuthHash<<endl;
 
@@ -36,11 +36,13 @@ User* DbAdapter::GetUser(string userName, string basicAuthHash)
 	}
 
 	delete res;
+	delete connection;
+	delete pstmt;
 	return accessingUser;
 }
 
 
-sql::Connection* DbAdapter::GetConnection()
+sql::Connection* MySqlDbAdapter::GetConnection()
 {
 	try {
 		sql::Driver *driver;
@@ -55,6 +57,7 @@ sql::Connection* DbAdapter::GetConnection()
 		con->setSchema("SandBox");
 
 		cout <<"Connected"<<endl;
+		driver->threadEnd();
 		return con;
 
 	} catch (sql::SQLException &e) {

@@ -9,7 +9,7 @@ extern "C" int ProcessRequest(char* requestString, char* method, char* body, cha
 
 	Request request(requestString,method,body,headers,hederCount);
 
-	DbAdapter adapter;
+	MySqlDbAdapter adapter;
 	RequestHandler handler(adapter);
 
 	string* responseString = new string();
@@ -17,5 +17,6 @@ extern "C" int ProcessRequest(char* requestString, char* method, char* body, cha
 
 	*out_response = (char*)responseString->c_str();
 
+	//delete responseString;
 	return status;
 }

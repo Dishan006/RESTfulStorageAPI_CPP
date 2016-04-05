@@ -7,17 +7,38 @@
  */
 #include <iostream>
 #include "../Include/RequestHandler.h"
+#include "../Include/Commands/CreateSchemaCommand.h"
 
 #include "../Include/Base64.h"
 #include "../Include/HashUtil.h"
+
 using namespace std;
 
-RequestHandler::RequestHandler(DbAdapter dbAdapter)
+RequestHandler::RequestHandler(MySqlDbAdapter dbAdapter)
 {
 	this->dbAdapter =dbAdapter;
 }
 
 int RequestHandler::ProcessRequest(Request request, string *response)
+{
+	if(!this->AuthenticateUser(request))
+	{
+		*response = "Unauthorized";
+		return 403;
+	}
+
+	if(IsValidEndPoint(request.RequestString))
+	{
+		CreateSchemaCommand createSchemaCommand(request);
+		*response = "OK";
+		return 200;
+	}
+
+	*response = "Not Found";
+	return 404;
+}
+
+bool RequestHandler::AuthenticateUser(Request request)
 {
 	if(request.Headers.size()>0)
 	{
@@ -26,47 +47,51 @@ int RequestHandler::ProcessRequest(Request request, string *response)
 		if(it!= request.Headers.end())
 		{
 			string autheHedareValue = it->second;
-			if(!autheHedareValue.empty() && this->AuthenticateUser(autheHedareValue))
+			if(!autheHedareValue.empty())
 			{
-				*response = "Authenticated";
-				return 200;
+				if (autheHedareValue.find("Basic") == 0)
+				{
+					string encodedSection = autheHedareValue.substr(6,autheHedareValue.length()-1); // 6 to skip the "Basic " string
+					//cout << "CPP: encodedSection :"<< encodedSection<<"\n";
+
+					string decodedData = base64_decode(encodedSection);
+					//cout << "CPP: Decoded :"<< decodedData<<"\n";
+
+					int splitter = decodedData.find_first_of(":",0);
+
+					string userName = decodedData.substr(0,splitter);
+
+					string* hashed = HashUtil::GenaretSHA256(decodedData);
+					//cout << "CPP: Hashed :"<< *hashed<<"\n";
+
+					User* user=	dbAdapter.GetUser(userName,*hashed);
+
+					delete(hashed);
+
+					if(user!=NULL)
+					{
+						delete(user);
+						return true;
+					}
+
+					delete(user);
+					return false;
+				}
 			}
 		}
 	}
 
-	*response = "Unauthorized";
-	return 403;
+	return false;
 }
 
-bool RequestHandler::AuthenticateUser(string authHeader)
+bool RequestHandler::IsValidEndPoint(string resource)
 {
-	if (authHeader.find("Basic") == 0)
+	int splitter = resource.find_first_of("/",0);
+	string firstSegment = resource.substr(0,splitter);
+
+	if(firstSegment=="schemas")
 	{
-		string encodedSection = authHeader.substr(6,authHeader.length()-1); // 6 to skip the "Basic " string
-		cout << "CPP: encodedSection :"<< encodedSection<<"\n";
-
-		string decodedData = base64_decode(encodedSection);
-		cout << "CPP: Decoded :"<< decodedData<<"\n";
-
-		int splitter = decodedData.find_first_of(":",0);
-
-		string userName = decodedData.substr(0,splitter);
-
-		string* hashed = HashUtil::GenaretSHA256(decodedData);
-		cout << "CPP: Hashed :"<< *hashed<<"\n";
-
-		User* user=	dbAdapter.GetUser(userName,*hashed);
-
-		delete(hashed);
-
-		if(user!=NULL)
-		{
-			delete(user);
-			return true;
-		}
-
-		delete(user);
-		return false;
+		return true;
 	}
 
 	return false;
