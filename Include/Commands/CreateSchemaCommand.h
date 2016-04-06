@@ -5,7 +5,7 @@
  *      Author: dishan
  */
 
-#include "../Request.h"
+#include "RequestContext.h"
 #include <iostream>
 #include <stdlib.h>
 
@@ -15,7 +15,7 @@
 class CreateSchemaCommand
 {
 public:
-	CreateSchemaCommand(Request request);
+	CreateSchemaCommand(RequestContext requestContext);
     void Execute();
 };
 

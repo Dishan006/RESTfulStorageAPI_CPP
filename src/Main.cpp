@@ -1,8 +1,8 @@
 #include <iostream>
 #include <string>
 #include <sstream>
-#include "../Include/Request.h"
-#include "../Include/RequestHandler.h"
+#include "Request.h"
+#include "RequestHandler.h"
 using namespace std;
 
 extern "C" int ProcessRequest(char* requestString, char* method, char* body, char**headers, int hederCount, char** out_response) {

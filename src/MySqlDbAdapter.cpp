@@ -5,10 +5,10 @@
  *      Author: dishan
  */
 
-#include "../Include/Entities/User.h"
+#include "User.h"
 #include <iostream>
 #include <stdlib.h>
-#include "../Include/MySqlDbAdapter.h"
+#include "MySqlDbAdapter.h"
 
 User* MySqlDbAdapter::GetUser(string userName, string basicAuthHash)
 {

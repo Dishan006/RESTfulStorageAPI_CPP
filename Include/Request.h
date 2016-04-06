@@ -22,7 +22,7 @@ public:
   int HeaderCount;
   map<string,string> Headers;
   Request(char* request, char* method, char* body, char**headers, int hederCount);
-
+  Request();
 };
 
 

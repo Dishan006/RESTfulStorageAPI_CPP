@@ -6,7 +6,7 @@
  *      Author: dishan
  */
 
-#include "../Include/MongoDbAdapter.h"
+#include "MongoDbAdapter.h"
 #include <iostream>
 
 
@@ -28,11 +28,3 @@ bool MongoDbAdapter::IsSchemaDefined(string name)
 	return false;
 }
 
-
-mongocxx::database* MongoDbAdapter::GetDB()
-{
-	mongocxx::instance inst{};
-	mongocxx::client conn{mongocxx::uri{}};
-	bsoncxx::stdx::string_view dbName("StorageTestDB");
-	return new mongocxx::database(conn[dbName]);
-}

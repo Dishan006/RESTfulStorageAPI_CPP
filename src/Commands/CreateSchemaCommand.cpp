@@ -5,16 +5,16 @@
  *      Author: dishan
  */
 
-#include "../../Include/Commands/CreateSchemaCommand.h"
-#include "../../Include/MongoDbAdapter.h"
+#include "CreateSchemaCommand.h"
+#include "MongoDbAdapter.h"
 #include <algorithm>
 
 
-CreateSchemaCommand::CreateSchemaCommand(Request request)
+CreateSchemaCommand::CreateSchemaCommand(RequestContext requestContext)
 {
 	MongoDbAdapter mongoAdapter;
 
-	string schemaName = request.RequestString.substr(8,request.RequestString.length()-1); // remove "schemas/"
+	string schemaName = requestContext.request.RequestString.substr(8,requestContext.request.RequestString.length()-1); // remove "schemas/"
 
 	std::transform(schemaName.begin(), schemaName.end(), schemaName.begin(), ::tolower);
 

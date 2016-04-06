@@ -5,7 +5,7 @@
  *      Author: dishan
  */
 
-#include "../../Include/Entities/User.h"
+#include "User.h"
 
 
 User::User(int userId, string userName)

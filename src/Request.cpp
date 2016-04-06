@@ -4,7 +4,7 @@
  *  Created on: Feb 27, 2016
  *      Author: dishan
  */
-#include "../Include/Request.h"
+#include "Request.h"
 #include <string>
 #include <vector>
 #include<stdlib.h>
@@ -35,6 +35,9 @@ Request::Request(char* request, char* method, char* body, char**headers, int hea
 
 	this->Headers = headersMap;
 }
+
+Request::Request()
+{}
 
 
 

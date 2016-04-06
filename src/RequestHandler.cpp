@@ -6,11 +6,11 @@
  *      Author: dishan
  */
 #include <iostream>
-#include "../Include/RequestHandler.h"
-#include "../Include/Commands/CreateSchemaCommand.h"
+#include "RequestHandler.h"
+#include "CreateSchemaCommand.h"
 
-#include "../Include/Base64.h"
-#include "../Include/HashUtil.h"
+#include "Base64.h"
+#include "HashUtil.h"
 
 using namespace std;
 
@@ -27,9 +27,11 @@ int RequestHandler::ProcessRequest(Request request, string *response)
 		return 403;
 	}
 
+	RequestContext context(request);
+
 	if(IsValidEndPoint(request.RequestString))
 	{
-		CreateSchemaCommand createSchemaCommand(request);
+		CreateSchemaCommand createSchemaCommand(context);
 		*response = "OK";
 		return 200;
 	}

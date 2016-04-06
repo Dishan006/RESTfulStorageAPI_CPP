@@ -8,7 +8,7 @@
 #ifndef MYSQLDBADAPTER_H_
 #define MYSQLDBADAPTER_H_
 
-#include "Entities/User.h"
+#include "User.h"
 #include "mysql_connection.h"
 #include <cppconn/driver.h>
 #include <cppconn/exception.h>

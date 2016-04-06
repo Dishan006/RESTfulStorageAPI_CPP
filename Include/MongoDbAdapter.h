@@ -22,9 +22,8 @@ class MongoDbAdapter
 {
 public:
 	bool IsSchemaDefined(string name);
+	void CreateSchema(string name, string jsonBody);
 
-private:
-	mongocxx::database* GetDB();
 
 };
 
