@@ -32,8 +32,7 @@ int RequestHandler::ProcessRequest(Request request, string *response)
 	if(IsValidEndPoint(request.RequestString))
 	{
 		CreateSchemaCommand createSchemaCommand(context);
-		*response = "OK";
-		return 200;
+		return createSchemaCommand.Execute(response);
 	}
 
 	*response = "Not Found";

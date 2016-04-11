@@ -14,9 +14,12 @@
 
 class CreateSchemaCommand
 {
+private:
+	RequestContext context;
+
 public:
 	CreateSchemaCommand(RequestContext requestContext);
-    void Execute();
+    int Execute(string* response);
 };
 
 

@@ -7,6 +7,9 @@
 
 #include "RequestContext.h"
 
+RequestContext::RequestContext()
+{
+}
 
 RequestContext::RequestContext(Request request)
 {
@@ -21,10 +24,10 @@ RequestContext::RequestContext(Request request)
 	bool parsingSuccessful = Json::parseFromStream(rbuilder, requestString, &root, &errs);
 	if (!parsingSuccessful)
 	{
-	    // report to the user the failure and their locations in the document.
-	    std::cout  << "Failed to parse configuration\n"
-	               << errs;
-	    return;
+		// report to the user the failure and their locations in the document.
+		std::cout  << "Failed to parse configuration\n"
+				<< errs;
+		return;
 	}
 
 	this->requestRoot = root;

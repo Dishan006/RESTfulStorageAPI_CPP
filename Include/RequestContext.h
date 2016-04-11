@@ -19,7 +19,7 @@ public:
 	Request request;
 	Json::Value requestRoot;
 	RequestContext(Request request);
-
+	RequestContext();
 };
 
 
