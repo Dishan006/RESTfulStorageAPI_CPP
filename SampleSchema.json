@@ -1,0 +1,10 @@
+{
+  "SchemaName": "File", 
+  "EntityName" : "File",
+  "EntitySetName" : "Files",
+  "Fields" : [
+      {"Name": "String"}, 
+      {"Size": "Int"},
+      {"Extension": "String"}
+  ]
+}

@@ -20,10 +20,12 @@ int CreateSchemaCommand::Execute(string* response)
 {
 	MongoDbAdapter mongoAdapter;
 
-	string schemaName = this->context.request.RequestString.substr(8,this->context.request.RequestString.length()-1); // remove "schemas/"
+	//string schemaName = this->context.request.RequestString.substr(8,this->context.request.RequestString.length()-1); // remove "schemas/"
 
-	std::transform(schemaName.begin(), schemaName.end(), schemaName.begin(), ::tolower);
+	//std::transform(schemaName.begin(), schemaName.end(), schemaName.begin(), ::tolower);
 
+	cout  <<"Schema:"<<  this->context.requestRoot["SchemaName"]<<endl;
+	string schemaName = this->context.requestRoot["SchemaName"].asString();
 	if(mongoAdapter.IsSchemaDefined(schemaName))
 	{
 		cout << schemaName <<" Schema is defined"<<endl;
@@ -31,9 +33,14 @@ int CreateSchemaCommand::Execute(string* response)
 		return 400;
 	}
 
-	std::cout  << this->context.requestRoot.get("Test", "").asString() <<endl;
-	std::cout  << this->context.requestRoot.get("tests", "").asString() <<endl;
+	if(schemaName!="Empty")
+	{
+		mongoAdapter.CreateSchema(schemaName,this->context.requestRoot);
+		*response = this->context.requestRoot.toStyledString();
+		return 201;
+	}
 
-	*response = "OK";
-	return 200;
+
+	*response = "{ \"error\": \"Error during the creation of the schema\"}";
+	return 400;
 }

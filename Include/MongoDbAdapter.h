@@ -11,6 +11,7 @@
 #include <mongocxx/client.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/uri.hpp>
+#include "json.h"
 
 #include <string>
 using namespace std;
@@ -22,7 +23,7 @@ class MongoDbAdapter
 {
 public:
 	bool IsSchemaDefined(string name);
-	void CreateSchema(string name, string jsonBody);
+	void CreateSchema(string name, Json::Value schemaObject);
 
 
 };
