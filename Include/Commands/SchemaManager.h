@@ -1,5 +1,5 @@
 /*
- * CreateSchemaCommand.h
+ * SchemaManager.h
  *
  *  Created on: Mar 30, 2016
  *      Author: dishan
@@ -9,17 +9,18 @@
 #include <iostream>
 #include <stdlib.h>
 
-#ifndef COMMANDS_CREATESCHEMACOMMAND_H_
-#define COMMANDS_CREATESCHEMACOMMAND_H_
+#ifndef COMMANDS_SCHEMAMANAGER_H_
+#define COMMANDS_SCHEMAMANAGER_H_
 
-class CreateSchemaCommand
+class SchemaManager
 {
 private:
 	RequestContext context;
 
 public:
-	CreateSchemaCommand(RequestContext requestContext);
-    int Execute(string* response);
+	SchemaManager(RequestContext requestContext);
+    int Create(string* response);
+    int GetAll(string* response);
 };
 
 

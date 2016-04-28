@@ -1,22 +1,23 @@
 /*
- * CreateSchemaCommand.cpp
+ * SchemaManager.cpp
  *
  *  Created on: Mar 30, 2016
  *      Author: dishan
  */
 
-#include "CreateSchemaCommand.h"
 #include "MongoDbAdapter.h"
 #include <algorithm>
+
+#include "SchemaManager.h"
 #include "json.h"
 
 
-CreateSchemaCommand::CreateSchemaCommand(RequestContext requestContext)
+SchemaManager::SchemaManager(RequestContext requestContext)
 {
 	this->context =requestContext;
 }
 
-int CreateSchemaCommand::Execute(string* response)
+int SchemaManager::Create(string* response)
 {
 	MongoDbAdapter mongoAdapter;
 
@@ -44,3 +45,11 @@ int CreateSchemaCommand::Execute(string* response)
 	*response = "{ \"error\": \"Error during the creation of the schema\"}";
 	return 400;
 }
+
+int SchemaManager::GetAll(string* response)
+{
+	MongoDbAdapter mongoAdapter;
+	*response = mongoAdapter.GetSchemaCollection().toStyledString();
+	return 200;
+}
+

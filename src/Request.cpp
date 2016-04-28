@@ -14,9 +14,20 @@
 Request::Request(char* request, char* method, char* body, char**headers, int headerCount)
 {
 	this->HeaderCount =headerCount;
-	this->RequestString = string(request);
-	this->Body = string(body);
-	this->Method= string(method);
+	if(request!=NULL)
+	{
+		this->RequestString = string(request);
+	}
+
+	if(body!=NULL)
+	{
+		this->Body = string(body);
+	}
+
+	if(method)
+	{
+		this->Method= string(method);
+	}
 
 	map<string,string> headersMap;
 	for(int i=0;i<headerCount;i++)

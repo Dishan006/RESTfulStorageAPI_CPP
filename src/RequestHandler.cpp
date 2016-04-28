@@ -7,8 +7,8 @@
  */
 #include <iostream>
 #include "RequestHandler.h"
-#include "CreateSchemaCommand.h"
 
+#include "../Include/Commands/SchemaManager.h"
 #include "Base64.h"
 #include "HashUtil.h"
 
@@ -31,13 +31,23 @@ int RequestHandler::ProcessRequest(Request request, string *response)
 
 	if(IsValidEndPoint(request.RequestString))
 	{
-		if((request.RequestString == "Schemas" ||
-				request.RequestString == "schemas" ||
-				request.RequestString == "Schemas/" ||
-				request.RequestString == "schemas/")&&request.Method == "POST")
+		if(request.RequestString.find("Schemas") == 0 || request.RequestString.find("schemas") ==0)
 		{
-			CreateSchemaCommand createSchemaCommand(context);
-			return createSchemaCommand.Execute(response);
+			SchemaManager manager(context);
+
+			if(request.Method == "POST")
+			{
+				return manager.Create(response);
+			}
+
+			if(request.Method == "GET")
+			{
+				if(request.RequestString.length()==7) // Schemas only, without schema name as id.
+				{
+					return manager.GetAll(response);
+				}
+
+			}
 		}
 
 	}

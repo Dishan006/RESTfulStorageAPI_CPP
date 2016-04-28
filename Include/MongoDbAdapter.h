@@ -24,6 +24,7 @@ class MongoDbAdapter
 public:
 	bool IsSchemaDefined(string name);
 	void CreateSchema(string name, Json::Value schemaObject);
+	Json::Value GetSchemaCollection();
 
 
 };
