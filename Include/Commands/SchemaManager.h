@@ -21,6 +21,8 @@ public:
 	SchemaManager(RequestContext requestContext);
     int Create(string* response);
     int GetAll(string* response);
+    int GetSingleEntity(string* response, string key);
+    int DeleteSingleEntity(string* response, string key);
 };
 
 

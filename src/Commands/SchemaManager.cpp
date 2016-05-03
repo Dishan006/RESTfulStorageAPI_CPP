@@ -30,7 +30,7 @@ int SchemaManager::Create(string* response)
 	if(mongoAdapter.IsSchemaDefined(schemaName))
 	{
 		cout << schemaName <<" Schema is defined"<<endl;
-		*response = "{ \"error\": \"A Schema with that name has been already defined\"}";
+		*response = "{ \"error\": \"A Schema with that name has been already defined.\"}";
 		return 400;
 	}
 
@@ -42,7 +42,7 @@ int SchemaManager::Create(string* response)
 	}
 
 
-	*response = "{ \"error\": \"Error during the creation of the schema\"}";
+	*response = "{ \"error\": \"Error during the creation of the schema.\"}";
 	return 400;
 }
 
@@ -50,6 +50,35 @@ int SchemaManager::GetAll(string* response)
 {
 	MongoDbAdapter mongoAdapter;
 	*response = mongoAdapter.GetSchemaCollection().toStyledString();
+	return 200;
+}
+
+int SchemaManager::GetSingleEntity(string* response, string key)
+{
+	MongoDbAdapter mongoAdapter;
+	Json::Value value = mongoAdapter.GetSchema(key);
+
+	if(value == Json::nullValue)
+	{
+		*response = "{ \"error\": \"A Schema with that name was not found.\"}";
+		return 404;
+	}
+
+	*response = value.toStyledString();
+	return 200;
+}
+
+int SchemaManager::DeleteSingleEntity(string* response, string key)
+{
+	MongoDbAdapter mongoAdapter;
+	if(!mongoAdapter.IsSchemaDefined(key))
+	{
+		*response = "{ \"error\": \"A Schema with that name was not found.\"}";
+		return 404;
+	}
+
+	mongoAdapter.DeleteSchema(key);
+	*response = "{ \"message\": \"The schema was successfully deleted.\"}";
 	return 200;
 }
 

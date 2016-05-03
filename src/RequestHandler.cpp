@@ -14,6 +14,8 @@
 
 using namespace std;
 
+string GetRequestKey(string resourceUrl);
+
 RequestHandler::RequestHandler(MySqlDbAdapter dbAdapter)
 {
 	this->dbAdapter =dbAdapter;
@@ -46,13 +48,27 @@ int RequestHandler::ProcessRequest(Request request, string *response)
 				{
 					return manager.GetAll(response);
 				}
+				string key = GetRequestKey(request.RequestString);
+				return manager.GetSingleEntity(response,key);
 
+			}
+
+			if(request.Method == "DELETE")
+			{
+				string key = GetRequestKey(request.RequestString);
+				return manager.DeleteSingleEntity(response,key);
+			}
+
+			if(request.Method == "PATCH")
+			{
+				string key = GetRequestKey(request.RequestString);
+				return manager.DeleteSingleEntity(response,key);
 			}
 		}
 
 	}
 
-	*response = "Not Found";
+	*response = "{ \"error\": \"Item Not found\"}";
 	return 404;
 }
 
@@ -105,6 +121,10 @@ bool RequestHandler::AuthenticateUser(Request request)
 bool RequestHandler::IsValidEndPoint(string resource)
 {
 	int splitter = resource.find_first_of("/",0);
+	if(splitter == -1)
+	{
+		splitter = resource.find_first_of("(",0);
+	}
 	string firstSegment = resource.substr(0,splitter);
 
 	if(firstSegment=="schemas")
@@ -115,4 +135,18 @@ bool RequestHandler::IsValidEndPoint(string resource)
 	return false;
 }
 
+string GetRequestKey(string resourceUrl)
+{
+	int keyStart =resourceUrl.find("(");
+	int keyEnd =resourceUrl.find(")");
+	if(keyStart>0 && keyEnd>0 && (keyEnd>keyStart))
+	{
+		keyStart++;
+		string key  = resourceUrl.substr(keyStart,(keyEnd-keyStart));
+		cout << "Key:"<< key<<"\n";
+		return key;
+	}
+
+	return "";
+}
 

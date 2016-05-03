@@ -25,8 +25,9 @@ public:
 	bool IsSchemaDefined(string name);
 	void CreateSchema(string name, Json::Value schemaObject);
 	Json::Value GetSchemaCollection();
-
-
+	Json::Value GetSchema(string name);
+	void DeleteSchema(string name);
+	void UpdateSchema(string name, Json::Value schemaObject);
 };
 
 

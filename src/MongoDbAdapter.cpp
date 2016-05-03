@@ -43,9 +43,9 @@ void MongoDbAdapter::CreateSchema(string name, Json::Value schemaObject)
 
 	auto collection = database["schemas"];
 	document << "SchemaName" << schemaObject.get("SchemaName", "").asString()
-									<< "EntityName" << schemaObject.get("EntityName", "").asString()
-									<< "EntitySetName" << schemaObject.get("EntitySetName", "").asString()
-									<< "Fields" << open_document;
+											<< "EntityName" << schemaObject.get("EntityName", "").asString()
+											<< "EntitySetName" << schemaObject.get("EntitySetName", "").asString()
+											<< "Fields" << open_document;
 
 	for (auto const& id : fileds) {
 		std::cout << id << std::endl;
@@ -89,3 +89,46 @@ Json::Value MongoDbAdapter::GetSchemaCollection()
 	return schemas;
 }
 
+Json::Value MongoDbAdapter::GetSchema(string name)
+{
+	mongocxx::instance inst{};
+	mongocxx::client conn{mongocxx::uri{}};
+	bsoncxx::stdx::string_view dbName("StorageTestDB");
+
+	mongocxx::database database = conn[dbName];
+
+	auto cursor = database["schemas"].find( bsoncxx::builder::stream::document{} << "SchemaName" << name<<  bsoncxx::builder::stream::finalize);
+
+	for (auto&& doc : cursor) {
+		string json  =bsoncxx::to_json(doc);
+		std::cout << json << std::endl;
+		Json::Value parsedFromString;
+		Json::Reader reader;
+		bool parsingSuccessful = reader.parse(json, parsedFromString);
+		if (parsingSuccessful)
+		{
+			parsedFromString.removeMember("_id"); // Hide the BSON id.
+			return parsedFromString;
+		}
+	}
+
+	return Json::nullValue;
+}
+
+void MongoDbAdapter::DeleteSchema(string name)
+{
+	mongocxx::instance inst{};
+	mongocxx::client conn{mongocxx::uri{}};
+	bsoncxx::stdx::string_view dbName("StorageTestDB");
+
+	mongocxx::database database = conn[dbName];
+
+    bsoncxx::builder::stream::document filter_builder;
+    filter_builder << "SchemaName" << name;
+    database["schemas"].delete_one(filter_builder.view());
+}
+
+void MongoDbAdapter::UpdateSchema(string name, Json::Value schemaObject)
+{
+
+}
