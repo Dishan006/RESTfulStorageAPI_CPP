@@ -7,6 +7,7 @@
 
 #include <string>
 
+
 using namespace std;
 
 #ifndef ENTITIES_USER_H_

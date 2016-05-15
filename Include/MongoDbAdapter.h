@@ -22,7 +22,7 @@ using namespace std;
 class MongoDbAdapter
 {
 public:
-	bool IsSchemaDefined(string name);
+	bool IsSchemaDefined(string entitySetName);
 	void CreateSchema(string name, Json::Value schemaObject);
 	Json::Value GetSchemaCollection();
 	Json::Value GetSchema(string name);

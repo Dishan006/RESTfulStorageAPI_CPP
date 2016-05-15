@@ -7,24 +7,21 @@
 
 #include <string>
 #include <map>
+#include "Entity.h"
+
 using namespace std;
 
 #ifndef ENTITIES_SCHEMA_H_
 #define ENTITIES_SCHEMA_H_
 
-class Schema
+class Schema:public Entity
 {
 public:
-	int SchemaId;
 	string SchemaName;
 	string EntityName;
 	string EntitySetName;
-	map<string,string> Fileds;
+	map<string,string> Fields;
 	Schema();
 };
-
-
-
-
 
 #endif /* ENTITIES_SCHEMA_H_ */

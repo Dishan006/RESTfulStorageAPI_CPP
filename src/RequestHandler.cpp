@@ -8,13 +8,15 @@
 #include <iostream>
 #include "RequestHandler.h"
 
-#include "../Include/Commands/SchemaManager.h"
+#include "SchemaManager.h"
 #include "Base64.h"
 #include "HashUtil.h"
+#include "EntityConverter.h"
+#include "MongoDbAdapter.h"
 
 using namespace std;
 
-string GetRequestKey(string resourceUrl);
+const string GetRequestKey(const string resourceUrl);
 
 RequestHandler::RequestHandler(MySqlDbAdapter dbAdapter)
 {
@@ -31,7 +33,9 @@ int RequestHandler::ProcessRequest(Request request, string *response)
 
 	RequestContext context(request);
 
-	if(IsValidEndPoint(request.RequestString))
+	Schema* requestSchema = NULL;
+
+	if(IsValidEndPoint(request.RequestString,requestSchema))
 	{
 		if(request.RequestString.find("Schemas") == 0 || request.RequestString.find("schemas") ==0)
 		{
@@ -64,7 +68,23 @@ int RequestHandler::ProcessRequest(Request request, string *response)
 				string key = GetRequestKey(request.RequestString);
 				return manager.DeleteSingleEntity(response,key);
 			}
-		}
+		}else
+			if(requestSchema!=NULL)
+			{
+				if(request.Method == "GET")
+				{
+					if(request.RequestString.length()==requestSchema->EntitySetName.length()) // Get All
+					{
+
+					}
+
+					string key = GetRequestKey(request.RequestString);
+
+				}
+			}
+
+		*response = "{ \"error\": \"Feature Not Implemented\"}";
+		return 501;
 
 	}
 
@@ -118,7 +138,7 @@ bool RequestHandler::AuthenticateUser(Request request)
 	return false;
 }
 
-bool RequestHandler::IsValidEndPoint(string resource)
+bool RequestHandler::IsValidEndPoint(const string resource,Schema *schema)
 {
 	int splitter = resource.find_first_of("/",0);
 	if(splitter == -1)
@@ -132,10 +152,29 @@ bool RequestHandler::IsValidEndPoint(string resource)
 		return true;
 	}
 
+	MongoDbAdapter mongoAdapter;
+
+	Json::Value schemaCollectionJson = mongoAdapter.GetSchemaCollection();
+	EntityConverter entityConverter;
+
+	std::vector<Schema> schemaCollection = entityConverter.ConvertJsonSchemaCollectionToEntities(schemaCollectionJson);
+
+	if(int(schemaCollection.size())>0)
+	{
+		for(std::size_t i=0;i<schemaCollection.size();i++)
+		{
+			if(schemaCollection[i].EntitySetName== firstSegment)
+			{
+				schema = new Schema(schemaCollection[i]);
+				return true;
+			}
+		}
+	}
+
 	return false;
 }
 
-string GetRequestKey(string resourceUrl)
+const string GetRequestKey(const string resourceUrl)
 {
 	int keyStart =resourceUrl.find("(");
 	int keyEnd =resourceUrl.find(")");

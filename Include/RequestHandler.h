@@ -8,6 +8,7 @@
 using namespace std;
 #include "Request.h"
 #include "MySqlDbAdapter.h"
+#include "Schema.h"
 
 #ifndef REQUESTHANDLER_H_
 #define REQUESTHANDLER_H_
@@ -17,7 +18,7 @@ class RequestHandler
 private:
 	MySqlDbAdapter dbAdapter;
 	bool AuthenticateUser(Request request);
-	bool IsValidEndPoint(string resource);
+	bool IsValidEndPoint(string resource,Schema *schema);
 
 public:
 	RequestHandler(MySqlDbAdapter dbAdapter);

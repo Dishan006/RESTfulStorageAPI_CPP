@@ -21,16 +21,15 @@ int SchemaManager::Create(string* response)
 {
 	MongoDbAdapter mongoAdapter;
 
-	//string schemaName = this->context.request.RequestString.substr(8,this->context.request.RequestString.length()-1); // remove "schemas/"
-
-	//std::transform(schemaName.begin(), schemaName.end(), schemaName.begin(), ::tolower);
 
 	cout  <<"Schema:"<<  this->context.requestRoot["SchemaName"]<<endl;
 	string schemaName = this->context.requestRoot["SchemaName"].asString();
-	if(mongoAdapter.IsSchemaDefined(schemaName))
+	string entitySetName = this->context.requestRoot["EntitySetName"].asString();
+
+	if(mongoAdapter.IsSchemaDefined(entitySetName))
 	{
 		cout << schemaName <<" Schema is defined"<<endl;
-		*response = "{ \"error\": \"A Schema with that name has been already defined.\"}";
+		*response = "{ \"error\": \"A Schema with that entity set name has been already defined.\"}";
 		return 400;
 	}
 

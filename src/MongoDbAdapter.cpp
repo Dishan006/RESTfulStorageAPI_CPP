@@ -12,7 +12,7 @@ using bsoncxx::builder::stream::close_document;
 #include <iostream>
 
 
-bool MongoDbAdapter::IsSchemaDefined(string name)
+bool MongoDbAdapter::IsSchemaDefined(string entitySetName)
 {
 	mongocxx::instance inst{};
 	mongocxx::client conn{mongocxx::uri{}};
@@ -20,7 +20,7 @@ bool MongoDbAdapter::IsSchemaDefined(string name)
 
 	mongocxx::database database = conn[dbName];
 
-	auto cursor = database["schemas"].find( bsoncxx::builder::stream::document{} << "SchemaName" << name<<  bsoncxx::builder::stream::finalize);
+	auto cursor = database["schemas"].find( bsoncxx::builder::stream::document{} << "EntitySetName" << entitySetName<<  bsoncxx::builder::stream::finalize);
 
 	for (auto&& doc : cursor) {
 		std::cout << bsoncxx::to_json(doc) << std::endl;
@@ -130,5 +130,5 @@ void MongoDbAdapter::DeleteSchema(string name)
 
 void MongoDbAdapter::UpdateSchema(string name, Json::Value schemaObject)
 {
-
+	// TODO:Implement this!!! :D
 }
